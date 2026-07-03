@@ -153,7 +153,11 @@ jobs:
           real=$(realpath $path)
           echo "Apply patches in $real to frida/subprojects/$name"
           cd subprojects/$name
-          git am ../../../patches/$name/*.patch
+          for patchfile in ../../../patches/$name/*.patch
+          do
+            echo "Applying $(basename $patchfile)"
+            patch -p1 --fuzz=3 --forward --no-backup-if-mismatch < "$patchfile"
+          done
           cd ../..
           echo $i
         done
